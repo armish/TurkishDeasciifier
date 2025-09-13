@@ -70,8 +70,6 @@ struct TurkishDeasciifier {
                     }
                 }
                 
-                let totalPatterns = json.values.map { $0.count }.reduce(0, +)
-                print("✅ Loaded \(totalPatterns) complete patterns for 98% accuracy")
                 return patterns
             }
         } catch {
