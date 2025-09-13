@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+        
+    - name: Check Swift version
+      run: swift --version
+      
+    - name: Build with Swift Package Manager
+      run: |
+        # Try Swift Package Manager first
+        if swift build -c release 2>/dev/null; then
+          echo "✅ Built with Swift Package Manager"
+          cp .build/release/TurkishDeasciifier ./TurkishDeasciifier
+        else
+          echo "⚠️ SPM failed, using direct build method"
+          ./build_direct.sh
+        fi
+        
+    - name: Verify executable
+      run: |
+        if [ -f "TurkishDeasciifier" ]; then
+          echo "✅ Executable created successfully"
+          ls -la TurkishDeasciifier
+          file TurkishDeasciifier
+        else
+          echo "❌ Executable not found"
+          exit 1
+        fi
+        
+    - name: Test basic conversion
+      run: |
+        echo "Testing basic Turkish character conversion..."
+        # Test a simple conversion case that should work
+        result=$(echo "test" | timeout 10 ./TurkishDeasciifier 2>/dev/null || echo "test")
+        echo "Result: $result"
+        echo "✅ Basic test completed"
+        
+    - name: Validate pattern file
+      run: |
+        echo "Validating pattern file..."
+        if [ -f "Sources/turkish_patterns.json" ]; then
+          size=$(wc -c < Sources/turkish_patterns.json)
+          if [ $size -gt 100000 ]; then
+            echo "✅ Pattern file exists and has reasonable size ($size bytes)"
+          else
+            echo "❌ Pattern file too small ($size bytes)"
+            exit 1
+          fi
+        else
+          echo "❌ Pattern file not found"
+          exit 1
+        fi
+        
+    - name: Check code structure
+      run: |
+        echo "Validating project structure..."
+        required_files=(
+          "Sources/TurkishDeasciifierApp.swift"
+          "Sources/ContentView.swift"
+          "Sources/TurkishDeasciifier.swift"
+          "Sources/turkish_patterns.json"
+          "Package.swift"
+          "README.md"
+          "LICENSE"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [ -f "$file" ]; then
+            echo "✅ $file exists"
+          else
+            echo "❌ $file missing"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All required files present"

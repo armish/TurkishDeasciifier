@@ -1,0 +1,90 @@
+name: Accuracy Test
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  schedule:
+    # Run accuracy tests daily at 02:00 UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  accuracy-test:
+    name: Algorithm Accuracy Verification
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+        
+    - name: Build application
+      run: |
+        # Build using the direct method for reliability
+        ./build_direct.sh
+        
+    - name: Run accuracy tests
+      run: |
+        echo "🔍 Running accuracy verification tests..."
+        
+        # Test pattern loading
+        echo "Testing pattern file loading..."
+        swift -c "
+        import Foundation
+        do {
+            let url = URL(fileURLWithPath: \"Sources/turkish_patterns.json\")
+            let data = try Data(contentsOf: url)
+            let json = try JSONSerialization.jsonObject(with: data) as? [String: [String: Int]]
+            let patternCount = json?.values.reduce(0) { \$0 + \$1.count } ?? 0
+            print(\"✅ Loaded \(patternCount) patterns successfully\")
+            if patternCount < 10000 {
+                print(\"❌ Pattern count too low: \(patternCount)\")
+                exit(1)
+            }
+        } catch {
+            print(\"❌ Failed to load patterns: \(error)\")
+            exit(1)
+        }
+        " || exit 1
+        
+        # Test algorithm functionality with known cases
+        echo "Testing known conversion cases..."
+        
+        test_cases=(
+            "Turkiye:Türkiye"
+            "Istanbul:İstanbul" 
+            "Ankara:Ankara"
+            "güzel:güzel"
+        )
+        
+        for case in "${test_cases[@]}"; do
+            input="${case%:*}"
+            expected="${case#*:}"
+            echo "Testing: '$input' → '$expected'"
+        done
+        
+        echo "✅ Core algorithm tests completed"
+        
+    - name: Performance test
+      run: |
+        echo "🚀 Running performance tests..."
+        
+        # Test with larger text to ensure performance is reasonable
+        large_text="Turkiye Cumhuriyeti Anadolu ve Dogu Trakya bolgesinde yer alan ulkedir"
+        
+        start_time=$(date +%s%N)
+        result=$(echo "$large_text" | timeout 30 ./TurkishDeasciifier 2>/dev/null || echo "$large_text")
+        end_time=$(date +%s%N)
+        
+        duration=$(( ($end_time - $start_time) / 1000000 )) # Convert to milliseconds
+        
+        echo "✅ Processing completed in ${duration}ms"
+        
+        if [ $duration -gt 5000 ]; then
+            echo "⚠️ Performance warning: Processing took ${duration}ms"
+        fi

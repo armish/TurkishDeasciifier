@@ -2,7 +2,12 @@
 
 A macOS menu bar application that converts ASCII Turkish text to proper Turkish characters with diacritics (ç, ğ, ı, İ, ö, ş, ü). Perfect for Turkish speakers living abroad using English keyboards.
 
-![Turkish Deasciifier](https://img.shields.io/badge/accuracy-100%25-brightgreen) ![Platform](https://img.shields.io/badge/platform-macOS%2013+-blue) ![Swift](https://img.shields.io/badge/swift-5.8+-orange)
+[![CI](https://github.com/armish/TurkishDeasciifier/actions/workflows/ci.yml/badge.svg)](https://github.com/armish/TurkishDeasciifier/actions/workflows/ci.yml)
+[![Accuracy Test](https://github.com/armish/TurkishDeasciifier/actions/workflows/accuracy-test.yml/badge.svg)](https://github.com/armish/TurkishDeasciifier/actions/workflows/accuracy-test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Turkish Deasciifier](https://img.shields.io/badge/accuracy-100%25-brightgreen) 
+![Platform](https://img.shields.io/badge/platform-macOS%2013+-blue) 
+![Swift](https://img.shields.io/badge/swift-5.8+-orange)
 
 ## ✨ Features
 
@@ -19,7 +24,7 @@ A macOS menu bar application that converts ASCII Turkish text to proper Turkish 
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/armish/TurkishDeasciifier.git
 cd TurkishDeasciifier
 
 # Build the application
@@ -178,11 +183,13 @@ private let turkishContextSize = 10  // Characters to analyze around target
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
+1. Fork the [repository](https://github.com/armish/TurkishDeasciifier)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Add tests for new functionality
-4. Ensure 100% accuracy is maintained
-5. Submit a pull request
+4. Ensure 100% accuracy is maintained (`swift Tests/debug_accuracy.swift`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Submit a pull request
 
 ## 📄 License
 
@@ -196,9 +203,10 @@ MIT License - see LICENSE file for details.
 
 ## 📞 Support
 
-- **Issues**: Report bugs and feature requests via GitHub Issues
+- **Issues**: Report bugs and feature requests via [GitHub Issues](https://github.com/armish/TurkishDeasciifier/issues)
 - **Accuracy Problems**: Include sample text and expected output
 - **Build Problems**: Specify macOS version and Xcode setup
+- **Discussions**: Join conversations on [GitHub Discussions](https://github.com/armish/TurkishDeasciifier/discussions)
 
 ---
 
