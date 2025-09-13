@@ -11,7 +11,6 @@ A macOS menu bar application that converts ASCII Turkish text to proper Turkish 
 
 ## ✨ Features
 
-- **🎯 100% Accuracy**: Matches Python deasciifier.com algorithm exactly
 - **⚡ Global Hotkey**: Convert selected text anywhere with ⌘⇧T
 - **🔤 Menu Bar Integration**: Lightweight, always-accessible interface
 - **📝 Real-time Conversion**: Type and see results instantly
@@ -116,23 +115,6 @@ swift Tests/debug_accuracy.swift
 | `buyuk bolumu` | `büyük bölümü` |
 | `Istanbul'un` | `İstanbul'un` |
 
-## 📁 Project Structure
-
-```
-TurkishDeasciifier/
-├── README.md                      # This file
-├── Package.swift                  # Swift Package Manager configuration
-├── build_direct.sh               # Direct build script
-├── Sources/
-│   ├── TurkishDeasciifierApp.swift  # Main app & menu bar logic
-│   ├── ContentView.swift            # SwiftUI interface
-│   ├── TurkishDeasciifier.swift     # Core conversion algorithm
-│   └── turkish_patterns.json       # 13,462 contextual patterns
-└── Tests/
-    ├── debug_accuracy.swift       # Accuracy verification
-    └── comprehensive_result.txt   # Test reference data
-```
-
 ## 🔬 Algorithm Details
 
 ### Pattern-Based Context Analysis
@@ -198,15 +180,13 @@ MIT License - see LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-This project builds upon the excellent work of the Turkish NLP community:
+This project builds upon the excellent work of the Turkish NLP community and enthusiasts:
 
-- **Original Algorithm**: Based on the [deasciifier](https://github.com/meacer/deasciifier) by [Mustafa Emre Acer](https://github.com/meacer)
-- **Pattern Data**: Derived from [deasciify](https://github.com/denizyuret/deasciify) by [Deniz Yuret](https://github.com/denizyuret)
-- **Inspiration**: The original deasciifier.com web service that served the Turkish community
-- **Swift Implementation**: Complete rewrite for macOS with 100% algorithm accuracy
-- **Development**: Built with Claude Code assistance
+- [deasciifier](https://github.com/meacer/deasciifier) by [Mustafa Emre Acer](https://github.com/meacer)
+- [deasciify](https://github.com/denizyuret/deasciify) by [Deniz Yuret](https://github.com/denizyuret)
+- [turkish-deasciifier](https://github.com/emres/turkish-deasciifier) by [Emre Sevinc](https://github.com/emres)
 
-Special thanks to the researchers and developers who made Turkish text processing accessible to everyone.
+Special thanks to all the other researchers and developers who made Turkish text processing accessible to everyone.
 
 ## 📞 Support
 
