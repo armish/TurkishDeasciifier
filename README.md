@@ -98,12 +98,8 @@ swiftc -o ../TurkishDeasciifier \
 # Build the application
 ./build_direct.sh
 
-# Test basic functionality
-echo "Turkiye'de yasayan insanlar" | ./TurkishDeasciifier
-# Expected: Türkiye'de yaşayan insanlar
-
-# Test accuracy (requires proper test data setup)
-swift Tests/debug_accuracy.swift
+# Test accuracy
+swift Tests/accuracy_test.swift
 ```
 
 ### Sample Conversions
@@ -169,7 +165,7 @@ private let turkishContextSize = 10  // Characters to analyze around target
 1. Fork the [repository](https://github.com/armish/TurkishDeasciifier)
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Add tests for new functionality
-4. Ensure 100% accuracy is maintained (`swift Tests/debug_accuracy.swift`)
+4. Ensure 100% accuracy is maintained (`swift Tests/accuracy_test.swift`)
 5. Commit your changes (`git commit -m 'Add amazing feature'`)
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Submit a pull request
