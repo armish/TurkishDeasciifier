@@ -1,7 +1,11 @@
+#!/usr/bin/env swift
+
 import Foundation
 
+// Standalone accuracy test that verifies 98%+ accuracy
+// This test will exit with code 1 if accuracy drops below 98%
+
 struct TurkishDeasciifier {
-    
     private let turkishContextSize = 10
     
     private let turkishAsciifyTable: [Character: Character] = [
@@ -28,7 +32,6 @@ struct TurkishDeasciifier {
         "ş": "s", "Ş": "S"
     ]
     
-    // Missing lookup tables from Python - essential for correct context building
     private let turkishDowncaseAsciifyTable: [Character: Character] = [
         "A": "a", "a": "a", "B": "b", "b": "b", "C": "c", "c": "c", "D": "d", "d": "d",
         "E": "e", "e": "e", "F": "f", "f": "f", "G": "g", "g": "g", "H": "h", "h": "h",
@@ -53,12 +56,10 @@ struct TurkishDeasciifier {
         "ö": "O", "Ö": "O", "ş": "S", "Ş": "S", "ü": "U", "Ü": "U"
     ]
     
-    // Load complete 13,462 patterns from JSON at runtime for 98% accuracy
+    // Load complete 13,462 patterns from JSON file
     private static let completePatterns: [Character: [String: Int]] = {
         do {
-            // Try to load from bundle resource first, then fallback to local file
             let url = URL(fileURLWithPath: "Sources/turkish_patterns.json")
-            
             let data = try Data(contentsOf: url)
             let json = try JSONSerialization.jsonObject(with: data) as? [String: [String: Int]]
             
@@ -69,22 +70,14 @@ struct TurkishDeasciifier {
                         patterns[char] = patternDict
                     }
                 }
-                
-                let totalPatterns = json.values.map { $0.count }.reduce(0, +)
-                print("✅ Loaded \(totalPatterns) complete patterns for 98% accuracy")
                 return patterns
             }
         } catch {
-            print("⚠️ Error loading complete patterns: \(error)")
+            print("❌ Error loading patterns: \(error)")
         }
         
-        print("❌ Using fallback patterns (lower accuracy)")
         return [:]
     }()
-    
-    private var turkishPatternTable: [Character: [String: Int]] {
-        return Self.completePatterns
-    }
     
     func convertToTurkish(_ text: String) -> String {
         var result = Array(text)
@@ -94,7 +87,6 @@ struct TurkishDeasciifier {
             if turkishNeedCorrection(char, at: i, in: result) {
                 result[i] = turkishToggleAccent(char)
             } else {
-                // Python explicitly sets the character even if no change (maintains state)
                 result[i] = char
             }
         }
@@ -127,7 +119,6 @@ struct TurkishDeasciifier {
         }
     }
     
-    // CORRECTED: Exact Python algorithm for pattern matching
     private func turkishMatchPattern(_ patternDict: [String: Int], at point: Int, in text: [Character]) -> Bool {
         var rank = 2 * patternDict.count  // Initialize rank like Python
         let contextStr = turkishGetContext(size: turkishContextSize, at: point, in: text)
@@ -154,7 +145,6 @@ struct TurkishDeasciifier {
         return rank > 0
     }
     
-    // CORRECTED: Exact Python algorithm for context building
     private func turkishGetContext(size: Int, at point: Int, in text: [Character]) -> String {
         // Step 1: Create string of spaces like Python
         var s = String(repeating: " ", count: 1 + (2 * size))
@@ -223,8 +213,145 @@ struct TurkishDeasciifier {
     }
 }
 
-extension Character {
-    func lowercased() -> String {
-        return String(self).lowercased()
+// Test cases with known inputs and expected outputs
+struct TestCase {
+    let input: String
+    let expected: String
+    let description: String
+}
+
+let testCases = [
+    TestCase(
+        input: "Turkiye",
+        expected: "Türkiye",
+        description: "Simple country name"
+    ),
+    TestCase(
+        input: "Istanbul",
+        expected: "İstanbul",
+        description: "City name with capital I"
+    ),
+    TestCase(
+        input: "Ankara",
+        expected: "Ankara",
+        description: "No conversion needed"
+    ),
+    TestCase(
+        input: "Turkiye'nin baskenti",
+        expected: "Türkiye'nin başkenti",
+        description: "Possessive and word combination"
+    ),
+    TestCase(
+        input: "buyuk",
+        expected: "büyük",
+        description: "Common adjective"
+    ),
+    TestCase(
+        input: "guzel",
+        expected: "güzel",
+        description: "Common adjective"
+    ),
+    TestCase(
+        input: "tesekkur ederim",
+        expected: "teşekkür ederim",
+        description: "Thank you phrase"
+    ),
+    TestCase(
+        input: "dogru",
+        expected: "doğru",
+        description: "Word with ğ"
+    ),
+    TestCase(
+        input: "cok",
+        expected: "çok",
+        description: "Very common word"
+    ),
+    TestCase(
+        input: "guc",
+        expected: "güç",
+        description: "Multiple conversions"
+    ),
+    TestCase(
+        input: "universitelerin",
+        expected: "üniversitelerin",
+        description: "Long word with prefix"
+    ),
+    TestCase(
+        input: "ogrenci",
+        expected: "öğrenci",
+        description: "Student - common word"
+    ),
+    TestCase(
+        input: "Turk",
+        expected: "Türk",
+        description: "Nationality"
+    ),
+    TestCase(
+        input: "dusunce",
+        expected: "düşünce",
+        description: "Thought - multiple conversions"
+    ),
+    TestCase(
+        input: "Ataturk",
+        expected: "Atatürk",
+        description: "Proper name"
+    )
+]
+
+// Run tests
+print("🧪 TURKISH DEASCIIFIER ACCURACY TEST")
+print("=====================================")
+print("Running \(testCases.count) test cases...")
+print("")
+
+let deasciifier = TurkishDeasciifier()
+var passed = 0
+var failed = 0
+var failedTests: [TestCase] = []
+
+for testCase in testCases {
+    let result = deasciifier.convertToTurkish(testCase.input)
+    if result == testCase.expected {
+        print("✅ PASS: \(testCase.description)")
+        print("   '\(testCase.input)' → '\(result)'")
+        passed += 1
+    } else {
+        print("❌ FAIL: \(testCase.description)")
+        print("   Input:    '\(testCase.input)'")
+        print("   Expected: '\(testCase.expected)'")
+        print("   Got:      '\(result)'")
+        failed += 1
+        failedTests.append(testCase)
     }
+}
+
+// Calculate accuracy
+let total = passed + failed
+let accuracy = total > 0 ? (Double(passed) / Double(total)) * 100.0 : 0.0
+
+print("")
+print("=====================================")
+print("📊 RESULTS:")
+print("   Passed: \(passed)/\(total)")
+print("   Failed: \(failed)/\(total)")
+print("   Accuracy: \(String(format: "%.1f", accuracy))%")
+print("")
+
+// Determine pass/fail based on 98% threshold
+let minimumAccuracy = 98.0
+if accuracy >= minimumAccuracy {
+    print("✅ TEST PASSED: Accuracy \(String(format: "%.1f", accuracy))% meets minimum requirement of \(minimumAccuracy)%")
+    exit(0)
+} else {
+    print("❌ TEST FAILED: Accuracy \(String(format: "%.1f", accuracy))% is below minimum requirement of \(minimumAccuracy)%")
+    
+    if !failedTests.isEmpty {
+        print("")
+        print("Failed test cases:")
+        for testCase in failedTests {
+            print("  - \(testCase.description): '\(testCase.input)' should be '\(testCase.expected)'")
+        }
+    }
+    
+    exit(1)
 }

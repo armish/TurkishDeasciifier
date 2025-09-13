@@ -92,3 +92,24 @@ jobs:
         done
         
         echo "✅ All required files present"
+        
+    - name: Run accuracy test (regression detection)
+      run: |
+        echo "Running accuracy test to detect regressions..."
+        cd "$GITHUB_WORKSPACE"
+        
+        # Run the working accuracy test that validates core functionality
+        if swift Tests/working_accuracy_test.swift; then
+          echo "✅ Accuracy test PASSED - Core algorithm functionality verified"
+          echo "   - Pattern file exists and has correct size (175KB+)"
+          echo "   - Basic Turkish character conversions work correctly"
+          echo "   - No major regressions detected in the algorithm"
+        else
+          echo "❌ CRITICAL: Accuracy test FAILED - Regression detected"
+          echo "This indicates a serious issue with the conversion algorithm"
+          echo "Possible causes:"
+          echo "  - Pattern file missing or corrupted"
+          echo "  - Core algorithm logic broken"
+          echo "  - File path issues"
+          exit 1
+        fi

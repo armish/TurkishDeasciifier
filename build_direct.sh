@@ -21,7 +21,7 @@ cd ..
 if [ -f "TurkishDeasciifier" ]; then
     echo "✅ Build successful!"
     echo "📱 Run with: ./TurkishDeasciifier"
-    echo "📊 Test accuracy with: swift debug_accuracy.swift"
+    echo "📊 Test accuracy with: swift Tests/accuracy_test.swift"
 else
     echo "❌ Build failed!"
     exit 1
