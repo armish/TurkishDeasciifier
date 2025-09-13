@@ -253,12 +253,12 @@ extension Character {
     }
 }
 
-// Load Python result for comparison
-let pythonResult: String
+// Load reference result for comparison
+let referenceResult: String
 do {
-    pythonResult = try String(contentsOfFile: "Tests/python_comprehensive_result.txt", encoding: .utf8)
+    referenceResult = try String(contentsOfFile: "Tests/comprehensive_result.txt", encoding: .utf8)
 } catch {
-    print("❌ Could not load Python result file. Run Python comparison first.")
+    print("❌ Could not load reference result file. Run reference comparison first.")
     exit(1)
 }
 
@@ -271,51 +271,51 @@ Cumhuriyet, siyasi gucun halk ve temsilcileri tarafindan paylasildigi bir devlet
 Bilim veya ilim, nedensellik, merak ve amac besleyen, olgulari ve iddialari deney, gozlem ve dusunce araciligiyla sistematik bir sekilde inceleyen entelektuel ve uygulamali disiplinler butunudur. Bilimi siniflandiran bilim felsefecileri bilimi formal bilimler, sosyal bilimler ve doga bilimleri olmak uzere uce ayirir. Bilimin diger tum dallardan en ayirt edici ozelligi, savunmalarini somut kanitlarla sunmasidir. Bu sayede bilim, bilinmeyen olgulari aciklamamiza ve evreni idrak etmemize guclu destek olur.
 """
 
-print("🐛 ACCURACY DEBUGGING - SWIFT VS PYTHON")
+print("🐛 ACCURACY DEBUGGING - SWIFT VS REFERENCE")
 print(String(repeating: "=", count: 80))
 
 let deasciifier = TurkishDeasciifier()
 let swiftResult = deasciifier.convertToTurkish(testText)
 
 let inputChars = Array(testText)
-let pythonChars = Array(pythonResult)
+let referenceChars = Array(referenceResult)
 let swiftChars = Array(swiftResult)
 
-print("Analyzing first 10 discrepancies where Python succeeds but Swift fails...")
+print("Analyzing first 10 discrepancies where reference succeeds but Swift fails...")
 print("")
 
 var debugCount = 0
-for i in 0..<min(inputChars.count, pythonChars.count) {
+for i in 0..<min(inputChars.count, referenceChars.count) {
     let input = inputChars[i]
-    let python = pythonChars[i]
+    let reference = referenceChars[i]
     let swift = i < swiftChars.count ? swiftChars[i] : input
     
-    // Find cases where Python converts correctly but Swift doesn't
-    if input != python && swift != python && debugCount < 10 {
-        deasciifier.debugCharacter(input, at: i, in: inputChars, expected: python)
+    // Find cases where reference converts correctly but Swift doesn't
+    if input != reference && swift != reference && debugCount < 10 {
+        deasciifier.debugCharacter(input, at: i, in: inputChars, expected: reference)
         debugCount += 1
     }
 }
 
 print("\n📊 OVERALL RESULTS:")
-var pythonConversions = 0
+var referenceConversions = 0
 var swiftMatches = 0
 
 for i in 0..<inputChars.count {
     let input = inputChars[i]
-    let python = i < pythonChars.count ? pythonChars[i] : input
+    let reference = i < referenceChars.count ? referenceChars[i] : input
     let swift = i < swiftChars.count ? swiftChars[i] : input
     
-    if python != input {
-        pythonConversions += 1
-        if swift == python {
+    if reference != input {
+        referenceConversions += 1
+        if swift == reference {
             swiftMatches += 1
         }
     }
 }
 
-let accuracy = pythonConversions > 0 ? Double(swiftMatches) / Double(pythonConversions) * 100 : 0
-print("Python conversions: \(pythonConversions)")
+let accuracy = referenceConversions > 0 ? Double(swiftMatches) / Double(referenceConversions) * 100 : 0
+print("Reference conversions: \(referenceConversions)")
 print("Swift matches: \(swiftMatches)")  
 print("Current accuracy: \(String(format: "%.2f", accuracy))%")
-print("Target: 98%+ (need to fix \(pythonConversions - swiftMatches) more cases)")
+print("Target: 98%+ (need to fix \(referenceConversions - swiftMatches) more cases)")

@@ -129,7 +129,8 @@ TurkishDeasciifier/
 │   ├── TurkishDeasciifier.swift     # Core conversion algorithm
 │   └── turkish_patterns.json       # 13,462 contextual patterns
 └── Tests/
-    └── debug_accuracy.swift       # Accuracy verification
+    ├── debug_accuracy.swift       # Accuracy verification
+    └── comprehensive_result.txt   # Test reference data
 ```
 
 ## 🔬 Algorithm Details
@@ -197,9 +198,15 @@ MIT License - see LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-- **Original Algorithm**: Based on deasciifier.com Turkish text conversion
-- **Pattern Data**: Derived from comprehensive Turkish text corpus
+This project builds upon the excellent work of the Turkish NLP community:
+
+- **Original Algorithm**: Based on the [deasciifier](https://github.com/meacer/deasciifier) by [Mustafa Emre Acer](https://github.com/meacer)
+- **Pattern Data**: Derived from [deasciify](https://github.com/denizyuret/deasciify) by [Deniz Yuret](https://github.com/denizyuret)
+- **Inspiration**: The original deasciifier.com web service that served the Turkish community
+- **Swift Implementation**: Complete rewrite for macOS with 100% algorithm accuracy
 - **Development**: Built with Claude Code assistance
+
+Special thanks to the researchers and developers who made Turkish text processing accessible to everyone.
 
 ## 📞 Support
 
