@@ -35,7 +35,7 @@ cd TurkishDeasciifier
 
 ### Usage
 
-1. **Menu Bar Access**: Click the "ü" icon in your menu bar
+1. **Menu Bar Access**: Click the "tü" icon in your menu bar
 2. **Global Hotkey**: Select any text and press ⌘⇧T to convert instantly
 3. **Manual Conversion**: Type in the app window for real-time conversion
 

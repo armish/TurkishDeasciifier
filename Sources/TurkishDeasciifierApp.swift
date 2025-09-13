@@ -26,9 +26,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusItem.button {
-            // Create custom u→ü icon
-            button.title = "ü"
-            button.font = NSFont.systemFont(ofSize: 16, weight: .medium)
+            // Create custom tü icon with underlined t
+            let attributedTitle = NSMutableAttributedString(string: "tü")
+            attributedTitle.addAttribute(.font, value: NSFont.systemFont(ofSize: 16, weight: .medium), range: NSRange(location: 0, length: 2))
+            attributedTitle.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: 1))
+            button.attributedTitle = attributedTitle
             button.action = #selector(togglePopover(_:))
             button.target = self
             
@@ -205,24 +207,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func updateStatusIcon(success: Bool, count: Int) {
         guard let button = statusItem.button else { return }
         
+        // Create the original tü icon with underlined t
+        let createOriginalIcon = {
+            let attributedTitle = NSMutableAttributedString(string: "tü")
+            attributedTitle.addAttribute(.font, value: NSFont.systemFont(ofSize: 16, weight: .medium), range: NSRange(location: 0, length: 2))
+            attributedTitle.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: 1))
+            return attributedTitle
+        }
+        
         if success {
             // Briefly show success feedback, then revert to original
-            let originalTitle = "ü"
             button.title = "✓\(count)"
+            button.attributedTitle = NSAttributedString()
             button.image = nil
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                button.title = originalTitle
+                button.title = ""
+                button.attributedTitle = createOriginalIcon()
                 button.image = nil
             }
         } else {
             // Brief visual feedback for no changes
-            let originalTitle = "ü"
             button.title = "−"
+            button.attributedTitle = NSAttributedString()
             button.image = nil
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                button.title = originalTitle
+                button.title = ""
+                button.attributedTitle = createOriginalIcon()
                 button.image = nil
             }
         }
