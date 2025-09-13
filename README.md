@@ -88,16 +88,28 @@ swiftc -o ../TurkishDeasciifier \
 
 ## 🧪 Testing
 
-Verify accuracy with the included test suite:
+### Build and Run Tests
 
 ```bash
-# Test algorithm accuracy (should show 100%)
-swift debug_accuracy.swift
+# Build the application
+./build_direct.sh
 
-# Test with sample text
+# Test basic functionality
 echo "Turkiye'de yasayan insanlar" | ./TurkishDeasciifier
-# Output: Türkiye'de yaşayan insanlar
+# Expected: Türkiye'de yaşayan insanlar
+
+# Test accuracy (requires proper test data setup)
+swift Tests/debug_accuracy.swift
 ```
+
+### Sample Conversions
+
+| Input | Output |
+|-------|--------|
+| `Turkiye` | `Türkiye` |
+| `guclu gorunmek` | `güçlü görünmek` |
+| `buyuk bolumu` | `büyük bölümü` |
+| `Istanbul'un` | `İstanbul'un` |
 
 ## 📁 Project Structure
 

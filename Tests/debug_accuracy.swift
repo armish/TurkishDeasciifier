@@ -58,7 +58,7 @@ struct TurkishDeasciifier {
     // Load complete 13,462 patterns from JSON file
     private static let completePatterns: [Character: [String: Int]] = {
         do {
-            let url = URL(fileURLWithPath: "../Sources/turkish_patterns.json")
+            let url = URL(fileURLWithPath: "Sources/turkish_patterns.json")
             let data = try Data(contentsOf: url)
             let json = try JSONSerialization.jsonObject(with: data) as? [String: [String: Int]]
             
@@ -256,7 +256,7 @@ extension Character {
 // Load Python result for comparison
 let pythonResult: String
 do {
-    pythonResult = try String(contentsOfFile: "python_comprehensive_result.txt", encoding: .utf8)
+    pythonResult = try String(contentsOfFile: "Tests/python_comprehensive_result.txt", encoding: .utf8)
 } catch {
     print("❌ Could not load Python result file. Run Python comparison first.")
     exit(1)
