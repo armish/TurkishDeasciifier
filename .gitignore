@@ -13,8 +13,8 @@ TurkishDeasciifier
 Icon?
 
 # Development files
-*debug*.swift
-*test*.swift
+# *debug*.swift - Allow Tests/debug_accuracy.swift
+# *test*.swift - Allow test files in Tests/
 *.py
 *.txt
 *.json
