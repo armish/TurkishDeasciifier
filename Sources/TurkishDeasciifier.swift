@@ -109,7 +109,7 @@ struct TurkishDeasciifier {
         let match = turkishMatchPattern(patternList, at: point, in: text)
         
         if tr == "I" {
-            return char == tr ? match : !match
+            return char == tr ? !match : match
         } else {
             return char == tr ? match : !match
         }
