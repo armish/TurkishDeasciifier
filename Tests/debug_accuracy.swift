@@ -166,7 +166,7 @@ struct TurkishDeasciifier {
                 let pattern = String(contextStr[startIdx..<endIdx])
                 
                 if let r = patternDict[pattern], r != 0 {
-                    if abs(r) > abs(rank) {
+                    if abs(r) < abs(rank) {
                         rank = r
                     }
                 }
