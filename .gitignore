@@ -1,0 +1,28 @@
+# Build outputs
+.build/
+TurkishDeasciifier
+*.dSYM
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+.swiftpm/
+
+# macOS
+.DS_Store
+Icon?
+
+# Development files
+*debug*.swift
+*test*.swift
+*.py
+*.txt
+*.json
+failure_analysis.json
+
+# Temporary files
+*.tmp
+*.log
+
+# Keep the pattern file though
+!Sources/turkish_patterns.json
