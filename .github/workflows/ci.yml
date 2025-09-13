@@ -98,18 +98,20 @@ jobs:
         echo "Running accuracy test to detect regressions..."
         cd "$GITHUB_WORKSPACE"
         
-        # Run the working accuracy test that validates core functionality
-        if swift Tests/working_accuracy_test.swift; then
-          echo "✅ Accuracy test PASSED - Core algorithm functionality verified"
-          echo "   - Pattern file exists and has correct size (175KB+)"
-          echo "   - Basic Turkish character conversions work correctly"
-          echo "   - No major regressions detected in the algorithm"
+        # Run the comprehensive accuracy test (100% accuracy requirement)
+        if swift Tests/accuracy_test.swift; then
+          echo "✅ Accuracy test PASSED - Algorithm maintains 100% accuracy"
+          echo "   - All 15 test cases pass successfully"
+          echo "   - Perfect match with Python deasciifier behavior"
+          echo "   - Pattern file loaded correctly (175KB, 13,462 patterns)"
+          echo "   - No regressions detected in conversion algorithm"
         else
-          echo "❌ CRITICAL: Accuracy test FAILED - Regression detected"
-          echo "This indicates a serious issue with the conversion algorithm"
+          echo "❌ CRITICAL: Accuracy test FAILED - Algorithm regression detected"
+          echo "This indicates the conversion accuracy has dropped below 98% requirement"
           echo "Possible causes:"
           echo "  - Pattern file missing or corrupted"
-          echo "  - Core algorithm logic broken"
-          echo "  - File path issues"
+          echo "  - Algorithm logic regression"
+          echo "  - Character mapping table issues"
+          echo "  - Context building problems"
           exit 1
         fi
