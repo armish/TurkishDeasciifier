@@ -11,7 +11,7 @@ A macOS menu bar application that converts ASCII Turkish text to proper Turkish 
 
 ## ✨ Features
 
-- **⚡ Global Hotkey**: Convert selected text anywhere with ⌘⇧T
+- **⚡ Global Hotkey**: Convert selected text anywhere with ⌥⌘T
 - **🔤 Menu Bar Integration**: Lightweight, always-accessible interface
 - **📝 Real-time Conversion**: Type and see results instantly
 - **📋 Smart Clipboard**: Auto-copy converted text
@@ -36,7 +36,7 @@ cd TurkishDeasciifier
 ### Usage
 
 1. **Menu Bar Access**: Click the "tü" icon in your menu bar
-2. **Global Hotkey**: Select any text and press ⌘⇧T to convert instantly
+2. **Global Hotkey**: Select any text and press ⌥⌘T to convert instantly
 3. **Manual Conversion**: Type in the app window for real-time conversion
 
 ## 📖 Character Mappings
@@ -48,7 +48,7 @@ cd TurkishDeasciifier
 | i → ı | I → İ | Insan → İnsan |
 | o → ö | O → Ö | gorulmek → görülmek |
 | s → ş | S → Ş | seker → şeker |
-| u → ü | U → Ü | bulunmek → bulünmek |
+| u → ü | U → Ü | Turkiye → Türkiye |
 
 ## 🛠️ Requirements
 
@@ -151,7 +151,7 @@ If conversion accuracy is low:
 Edit `TurkishDeasciifierApp.swift` line 110:
 ```swift
 // Change key code 17 ('T') to desired key
-if event.modifierFlags.contains([.command, .shift]) && event.keyCode == 17 {
+if event.modifierFlags.contains([.command, .option]) && event.keyCode == 17 {
 ```
 
 ### Adjusting Context Size

@@ -51,7 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: ContentView())
         
-        // Set up global hotkey monitoring for Cmd+Shift+T
+        // Set up global hotkey monitoring for Option+Cmd+T
         eventMonitor = EventMonitor(mask: [.keyDown]) { [weak self] event in
             self?.handleGlobalKeyDown(event)
         }
@@ -97,7 +97,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func showAbout() {
         let alert = NSAlert()
         alert.messageText = "Turkish Deasciifier"
-        alert.informativeText = "Version 1.0\n\nA menu bar app to convert ASCII Turkish text to proper Turkish characters.\n\nGlobal Hotkey: ⌘⇧T\n\nDeveloped with Claude Code"
+        alert.informativeText = "Version 1.0\n\nA menu bar app to convert ASCII Turkish text to proper Turkish characters.\n\nGlobal Hotkey: ⌥⌘T\n\nDeveloped with Claude Code"
         alert.alertStyle = .informational
         alert.addButton(withTitle: "OK")
         alert.runModal()
@@ -108,8 +108,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func handleGlobalKeyDown(_ event: NSEvent) {
-        // Check for Cmd+Shift+T (key code 17 = 'T' key)
-        if event.modifierFlags.contains([.command, .shift]) && event.keyCode == 17 {
+        // Debug: Print key events to help troubleshoot
+        if event.keyCode == 17 { // T key
+            print("🔍 T key pressed with modifiers: \(event.modifierFlags)")
+            print("   Command: \(event.modifierFlags.contains(.command))")
+            print("   Option: \(event.modifierFlags.contains(.option))")
+            print("   Both: \(event.modifierFlags.contains([.command, .option]))")
+        }
+
+        // Check for Option+Cmd+T (key code 17 = 'T' key)
+        if event.modifierFlags.contains([.command, .option]) && event.keyCode == 17 {
+            print("✅ Hotkey triggered: Option+Cmd+T")
             convertSelectedText()
         }
     }
@@ -188,7 +197,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if !accessEnabled {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.showAlert(title: "Turkish Deasciifier", message: "Please grant accessibility permissions to enable global hotkey (⌘⇧T)")
+                self.showAlert(title: "Turkish Deasciifier", message: "Please grant accessibility permissions to enable global hotkey (⌥⌘T)")
             }
         }
     }

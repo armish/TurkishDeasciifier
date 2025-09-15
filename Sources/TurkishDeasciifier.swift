@@ -56,12 +56,36 @@ struct TurkishDeasciifier {
     // Load complete 13,462 patterns from JSON at runtime for 98% accuracy
     private static let completePatterns: [Character: [String: Int]] = {
         do {
-            // Try to load from bundle resource first, then fallback to local file
-            let url = URL(fileURLWithPath: "Sources/turkish_patterns.json")
-            
-            let data = try Data(contentsOf: url)
+            // Try multiple locations to find the patterns file
+            var url: URL?
+
+            // 1. Try app bundle resource first (for .app distribution)
+            if let bundleUrl = Bundle.main.url(forResource: "turkish_patterns", withExtension: "json") {
+                url = bundleUrl
+                print("🎯 Found patterns in app bundle: \(bundleUrl.path)")
+            }
+            // 2. Try relative path from executable (for development/direct binary)
+            else if FileManager.default.fileExists(atPath: "Sources/turkish_patterns.json") {
+                url = URL(fileURLWithPath: "Sources/turkish_patterns.json")
+                print("🎯 Found patterns in Sources directory")
+            }
+            // 3. Try relative to executable directory
+            else if let executablePath = Bundle.main.executablePath {
+                let executableDir = URL(fileURLWithPath: executablePath).deletingLastPathComponent()
+                let patternPath = executableDir.appendingPathComponent("turkish_patterns.json")
+                if FileManager.default.fileExists(atPath: patternPath.path) {
+                    url = patternPath
+                    print("🎯 Found patterns next to executable: \(patternPath.path)")
+                }
+            }
+
+            guard let patternUrl = url else {
+                throw NSError(domain: "TurkishDeasciifier", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not find turkish_patterns.json"])
+            }
+
+            let data = try Data(contentsOf: patternUrl)
             let json = try JSONSerialization.jsonObject(with: data) as? [String: [String: Int]]
-            
+
             var patterns: [Character: [String: Int]] = [:]
             if let json = json {
                 for (charStr, patternDict) in json {
@@ -69,13 +93,21 @@ struct TurkishDeasciifier {
                         patterns[char] = patternDict
                     }
                 }
-                
+
+                print("✅ Loaded \(patterns.count) pattern sets from \(patternUrl.path)")
                 return patterns
             }
         } catch {
             print("⚠️ Error loading complete patterns: \(error)")
+            print("🔍 Searched locations:")
+            print("   - App bundle: \(Bundle.main.url(forResource: "turkish_patterns", withExtension: "json")?.path ?? "not found")")
+            print("   - Sources dir: Sources/turkish_patterns.json")
+            if let executablePath = Bundle.main.executablePath {
+                let executableDir = URL(fileURLWithPath: executablePath).deletingLastPathComponent()
+                print("   - Executable dir: \(executableDir.appendingPathComponent("turkish_patterns.json").path)")
+            }
         }
-        
+
         print("❌ Using fallback patterns (lower accuracy)")
         return [:]
     }()

@@ -15,7 +15,7 @@ struct ContentView: View {
                     .font(.headline)
                     .fontWeight(.semibold)
                 
-                Text("Global Hotkey: ⌘⇧T")
+                Text("Global Hotkey: ⌥⌘T")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -132,7 +132,7 @@ struct ContentView: View {
                     .foregroundColor(.blue)
                     .font(.caption)
                 
-                Text("Select text anywhere and press ⌘⇧T to convert")
+                Text("Select text anywhere and press ⌥⌘T to convert")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 
