@@ -31,6 +31,18 @@ cp TurkishDeasciifier "${BUNDLE_NAME}/Contents/MacOS/${APP_NAME}"
 echo "📄 Including pattern file..."
 cp Sources/turkish_patterns.json "${BUNDLE_NAME}/Contents/Resources/"
 
+# Create app icon if it doesn't exist
+if [ ! -f "AppIcon.icns" ]; then
+    echo "🎨 Creating app icon..."
+    ./create_icon.sh
+fi
+
+# Copy app icon to Resources
+if [ -f "AppIcon.icns" ]; then
+    echo "🖼️  Including app icon..."
+    cp AppIcon.icns "${BUNDLE_NAME}/Contents/Resources/"
+fi
+
 # Create Info.plist
 cat > "${BUNDLE_NAME}/Contents/Info.plist" << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -57,6 +69,8 @@ cat > "${BUNDLE_NAME}/Contents/Info.plist" << 'EOF'
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright © 2024. All rights reserved.</string>
 </dict>

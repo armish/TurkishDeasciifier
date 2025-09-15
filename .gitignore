@@ -8,6 +8,10 @@ TurkishDeasciifier
 *.zip
 dist/
 
+# Generated icon files
+AppIcon.icns
+icon_temp/
+
 # Xcode
 *.xcodeproj/
 *.xcworkspace/
