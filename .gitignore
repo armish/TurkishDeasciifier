@@ -3,6 +3,11 @@
 TurkishDeasciifier
 *.dSYM
 
+# Distribution packages and app bundles
+*.app/
+*.zip
+dist/
+
 # Xcode
 *.xcodeproj/
 *.xcworkspace/
