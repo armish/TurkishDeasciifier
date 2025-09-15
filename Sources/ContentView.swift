@@ -4,7 +4,8 @@ struct ContentView: View {
     @State private var inputText = ""
     @State private var outputText = ""
     @State private var conversionCount = 0
-    
+    @State private var showCopySuccess = false
+
     private let deasciifier = TurkishDeasciifier()
     
     var body: some View {
@@ -58,20 +59,21 @@ struct ContentView: View {
                             Spacer()
                             
                             if !outputText.isEmpty {
-                                // Copy button
+                                // Copy button with success feedback
                                 Button(action: {
                                     copyToClipboard()
                                 }) {
                                     HStack(spacing: 4) {
-                                        Image(systemName: "doc.on.clipboard")
-                                        Text("Copy")
+                                        Image(systemName: showCopySuccess ? "checkmark" : "doc.on.clipboard")
+                                        Text(showCopySuccess ? "Copied!" : "Copy")
                                     }
                                     .font(.caption)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
-                                    .background(Color.blue.opacity(0.1))
-                                    .foregroundColor(.blue)
+                                    .background(showCopySuccess ? Color.green.opacity(0.1) : Color.blue.opacity(0.1))
+                                    .foregroundColor(showCopySuccess ? .green : .blue)
                                     .cornerRadius(4)
+                                    .animation(.easeInOut(duration: 0.2), value: showCopySuccess)
                                 }
                                 .buttonStyle(.plain)
                                 
@@ -149,23 +151,27 @@ struct ContentView: View {
         guard !text.isEmpty else {
             outputText = ""
             conversionCount = 0
+            showCopySuccess = false // Reset copy success when clearing
             return
         }
-        
+
         let converted = deasciifier.convertToTurkish(text)
         outputText = converted
-        
+
+        // Reset copy success when text changes
+        showCopySuccess = false
+
         // Count conversions
         let originalChars = Array(text)
         let convertedChars = Array(converted)
         var count = 0
-        
+
         for i in 0..<min(originalChars.count, convertedChars.count) {
             if originalChars[i] != convertedChars[i] {
                 count += 1
             }
         }
-        
+
         conversionCount = count
     }
     
@@ -173,9 +179,14 @@ struct ContentView: View {
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([.string], owner: nil)
         pasteboard.setString(outputText, forType: .string)
-        
-        // Brief visual feedback
-        // Could add a temporary "Copied!" message here if desired
+
+        // Show success feedback
+        showCopySuccess = true
+
+        // Reset after 1.5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            showCopySuccess = false
+        }
     }
 }
 
