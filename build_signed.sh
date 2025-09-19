@@ -7,7 +7,7 @@ set -e
 
 # Configuration - UPDATE THESE WITH YOUR VALUES
 # Find your identity with: security find-identity -v -p codesigning
-DEVELOPER_ID="Developer ID Application: YOUR_NAME (TEAM_ID)"
+DEVELOPER_ID="Developer ID Application: Bulent Aksoy (W97456DWR9)"
 APP_NAME="TurkishDeasciifier"
 APP_BUNDLE="${APP_NAME}.app"
 ENTITLEMENTS="entitlements.plist"

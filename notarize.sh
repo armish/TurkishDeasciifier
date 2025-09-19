@@ -12,8 +12,8 @@ BUNDLE_ID="com.turkishdeasciifier.app"
 
 # Notarization credentials - UPDATE THESE
 KEYCHAIN_PROFILE="turkish-deasciifier"  # Name for stored credentials
-APPLE_ID="your-apple-id@example.com"
-TEAM_ID="YOUR_TEAM_ID"
+APPLE_ID="arman@aksoy.org"
+TEAM_ID="W97456DWR9"
 
 # File names
 SIGNED_ZIP="${APP_NAME}-Signed.zip"
@@ -144,7 +144,7 @@ create_dmg() {
     rm -rf "$TEMP_DIR"
 
     # Sign the DMG
-    codesign --sign "Developer ID Application: YOUR_NAME (TEAM_ID)" \
+    codesign --sign "Developer ID Application: Bulent Aksoy (W97456DWR9)" \
         --timestamp \
         "$NOTARIZED_DMG"
 
