@@ -35,3 +35,7 @@ failure_analysis.json
 
 # Keep the pattern file though
 !Sources/turkish_patterns.json
+
+temp_pkg
+*.pkg
+*.dmg

@@ -11,16 +11,38 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Fixed header - always stays at top
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Turkish Deasciifier")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Text("Global Hotkey: ⌥⌘T")
-                    .font(.caption)
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Turkish Deasciifier")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+
+                    Text("Global Hotkey: ⌥⌘T")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                // Quit button for App Store compliance
+                Button(action: {
+                    NSApplication.shared.terminate(nil)
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 16))
+                        Text("Quit")
+                            .font(.system(size: 12))
+                    }
                     .foregroundColor(.secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
+                .help("Quit Turkish Deasciifier (⌘Q)")
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 12)
             .padding(.top, 12)
             .padding(.bottom, 8)
